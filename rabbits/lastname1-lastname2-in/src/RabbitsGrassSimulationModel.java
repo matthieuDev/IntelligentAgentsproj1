@@ -96,7 +96,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		
 		private int rabbitReaper(){
 			 int count = 0;
-			    for(int i = rabbitList.size()-1; i >0  ; i--){
+			    for(int i = rabbitList.size()-1; i >=0  ; i--){
 			    	RabbitsGrassSimulationAgent rab = 
 			    			(RabbitsGrassSimulationAgent)rabbitList.get(i);
 			      if(rab.getEnergy() < 1){
