@@ -11,6 +11,7 @@ public class RabbitsGrassSimulationSpace {
 	//1=01 => grass but no rabbit
 	private Object2DGrid gridGrass;
 	private Object2DGrid rabbitGrid;
+	private int countGrass = 0 ;
 
 	public RabbitsGrassSimulationSpace(int xSize, int ySize){
 		gridGrass = new Object2DGrid(xSize, ySize);
@@ -44,21 +45,13 @@ public class RabbitsGrassSimulationSpace {
 		      if (lw == 0){
 		    	  gridGrass.putObjectAt(x,y,new Integer(1));
 		    	  i--;
+		    	  countGrass++ ;
 		      }
 		     count++; 
 		}
 	}
 	
-	public int getRabbitGrassAt(int x, int y){
-	    int i;
-	    if(gridGrass.getObjectAt(x,y)!= null){
-	      i = ((Integer)gridGrass.getObjectAt(x,y)).intValue();
-	    }
-	    else{
-	      i = 0;
-	    }
-	    return i;
-	  }
+	
 	
 	public Object2DGrid getGridGrass(){
 	    return gridGrass;
@@ -83,32 +76,15 @@ public class RabbitsGrassSimulationSpace {
 		 
 		  }
 	 
-	 public boolean addGrass(){
-		    boolean retVal = false;
-		    int count = 0;
-		    int countLimit = 10 * gridGrass.getSizeX() * gridGrass.getSizeY();
-
-		    while((retVal==false) && (count < countLimit)){
-		      int x = (int)(Math.random()*(gridGrass.getSizeX()));
-		      int y = (int)(Math.random()*(gridGrass.getSizeY()));
-		      if(isCellOccupiedGrass(x,y) == false){
-		    	  gridGrass.putObjectAt(x,y,1);
-		        retVal = true;
-		      }
-		      count++;
-		    }
-
-		    return retVal;
-		  }
+	
 	 public boolean addRabbit(RabbitsGrassSimulationAgent agent){
 		    boolean retVal = false;
 		    int count = 0;
 		    int countLimit = 10 * rabbitGrid.getSizeX() * rabbitGrid.getSizeY();
-
 		    while((retVal==false) && (count < countLimit)){
 		      int x = (int)(Math.random()*(rabbitGrid.getSizeX()));
 		      int y = (int)(Math.random()*(rabbitGrid.getSizeY()));
-		      if(isCellOccupiedRabbit(x,y) == false){
+		      if(!isCellOccupiedRabbit(x,y)){
 		        rabbitGrid.putObjectAt(x,y,agent);
 		        agent.setXY(x,y);
 		        agent.setRabbitsGrassSimulationSpace(this);
@@ -131,5 +107,13 @@ public class RabbitsGrassSimulationSpace {
 			 rabbitGrid.putObjectAt(newX, newY, rga);
 			 rga.setXY(newX, newY);
 		 }
+	 }
+	 
+	 public int getCountGrass(){
+		 return countGrass;
+	 }
+	 
+	 public void decrementCountGrass(){
+		 countGrass--;
 	 }
 }

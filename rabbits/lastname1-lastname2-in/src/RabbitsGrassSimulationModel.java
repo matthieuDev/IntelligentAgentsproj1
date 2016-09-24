@@ -1,6 +1,10 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
+import uchicago.src.reflector.RangePropertyDescriptor;
+import uchicago.src.sim.analysis.DataSource;
+import uchicago.src.sim.analysis.OpenSequenceGraph;
+import uchicago.src.sim.analysis.Sequence;
 import uchicago.src.sim.engine.BasicAction;
 import uchicago.src.sim.engine.Schedule;
 import uchicago.src.sim.engine.SimInit;
@@ -10,6 +14,7 @@ import uchicago.src.sim.gui.ColorMap;
 import uchicago.src.sim.gui.Object2DDisplay;
 import uchicago.src.sim.gui.Value2DDisplay;
 import uchicago.src.sim.util.SimUtilities;
+
 
 /**
  * Class that implements the simulation model for the rabbits grass
@@ -29,6 +34,30 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 	private RabbitsGrassSimulationSpace grid;
 	private DisplaySurface displaySurf;
 	private ArrayList<RabbitsGrassSimulationAgent> rabbitList;
+	private OpenSequenceGraph graph;
+	
+	class rabbitInSpace implements DataSource, Sequence {
+
+	    public Object execute() {
+	      return new Double(getSValue());
+	    }
+
+	    public double getSValue() {
+	    	return (double)rabbitList.size();
+	    }
+	  }
+	
+	class grassInSpace implements DataSource, Sequence {
+
+	    public Object execute() {
+	      return new Double(getSValue());
+	    }
+
+	    public double getSValue() {
+	    	return (double)grid.getCountGrass();
+	      
+	    }
+	  }
 
 		public static void main(String[] args) {
 			
@@ -44,6 +73,8 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		    buildDisplay();
 		    
 		    displaySurf.display();
+		    graph.display();
+		    graph.step();
 			
 		}
 		
@@ -94,7 +125,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 
 		public void buildSchedule(){
-			 class CarryDropStep extends BasicAction {
+			 class NatureStep extends BasicAction {
 			      public void execute() {
 			        SimUtilities.shuffle(rabbitList);
 			        grid.oneStepAddGrass( grassGrowRate);
@@ -112,7 +143,15 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			    }
 			 
 
-			    schedule.scheduleActionBeginning(0, new CarryDropStep());
+			    schedule.scheduleActionBeginning(0, new NatureStep());
+			    
+			    class PlotUpdate extends BasicAction {
+			        public void execute(){
+			          graph.step();
+			        }
+			      }
+
+			      schedule.scheduleActionAtInterval(10, new PlotUpdate());
 		  }
 
 		  public void buildDisplay(){
@@ -131,6 +170,9 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 			    displaySurf.addDisplayable(displayGrass, "Grass");
 			    displaySurf.addDisplayable(displayRabbit, "Rabbit");
+			    
+			    graph.addSequence("Rabbit", new rabbitInSpace());
+			    graph.addSequence("Grass", new grassInSpace(),Color.green);
 		  }
 
 		public String[] getInitParam() {
@@ -148,6 +190,24 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		}
 
 		public void setup() {
+			RangePropertyDescriptor xSlide = new RangePropertyDescriptor("XSize", 0, 50, 10);
+			descriptors.put("XSize", xSlide);
+			
+			RangePropertyDescriptor ySlide = new RangePropertyDescriptor("YSize", 0, 50, 10);
+			descriptors.put("YSize", ySlide);
+			
+			RangePropertyDescriptor nbSlide = new RangePropertyDescriptor("Number", 0, 1000, 200);
+			descriptors.put("Number", nbSlide);
+			
+			RangePropertyDescriptor btSlide = new RangePropertyDescriptor("BirthThreshold", 0, 20, 5);
+			descriptors.put("BirthThreshold", btSlide);
+			
+			RangePropertyDescriptor grSlide = new RangePropertyDescriptor("GrassGrowRate", 0, 20, 5);
+			descriptors.put("GrassGrowRate", grSlide);
+			
+			RangePropertyDescriptor geSlide = new RangePropertyDescriptor("GrassEnergy", 0, 10, 1);
+			descriptors.put("GrassEnergy", geSlide);
+			
 			grid = null;
 			 schedule = new Schedule(1);
 			if (displaySurf != null){
@@ -161,7 +221,13 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			    
 			    rabbitList = new ArrayList<RabbitsGrassSimulationAgent>();
 
-			
+			    if (graph != null){
+			        graph.dispose();
+			      }
+			      graph = null;
+			      
+			      graph = new OpenSequenceGraph("Amount Of rabbits and grasses",this);
+			      this.registerMediaProducer("Plot", graph);
 		}
 		
 		public int getNumber(){

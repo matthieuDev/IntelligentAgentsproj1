@@ -19,15 +19,14 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 
 	public RabbitsGrassSimulationAgent(int energyThreshold, int eg) {
 		energyByGrass = eg;
-		energy = (int) ((Math.random() * energyThreshold));
+		energy = (int) ((Math.random() * (energyThreshold-1))) + 1;
 		IDNumber++;
 		ID = IDNumber;
 	}
 
 	public void draw(SimGraphics arg0) {
-		// TODO Auto-generated method stub
 		
-			arg0.drawFastRoundRect(Color.white);
+			arg0.drawCircle(Color.white);
 		
 		
 	}
@@ -90,6 +89,7 @@ public class RabbitsGrassSimulationAgent implements Drawable {
 		energy--;
 		if (rgSpace.isCellOccupiedGrass(x, y)) {
 			energy += energyByGrass;
+			rgSpace.decrementCountGrass();
 		}
 		tryMove();
 	}
