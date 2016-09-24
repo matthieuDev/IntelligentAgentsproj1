@@ -61,7 +61,6 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 
 		public static void main(String[] args) {
 			
-			System.out.println("Rabbit skeleton");
 			SimInit init = new SimInit();
 			RabbitsGrassSimulationModel model = new RabbitsGrassSimulationModel();
 		    init.loadModel(model, "", false);
@@ -111,7 +110,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 		
 		private int rabbitCreater(){
 			 int count = 0;
-			    for(int i = rabbitList.size()-1; i >0  ; i--){
+			    for(int i = rabbitList.size()-1; i >=0  ; i--){
 			    	RabbitsGrassSimulationAgent rab = 
 			    			(RabbitsGrassSimulationAgent)rabbitList.get(i);
 			      if(rab.getEnergy() > birthThreshold){
@@ -138,6 +137,7 @@ public class RabbitsGrassSimulationModel extends SimModelImpl {
 			        
 			        
 			        displaySurf.updateDisplay();
+			        
 			      }
 			      
 			    }
