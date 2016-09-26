@@ -1,0 +1,68 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Monaco;}
+{\colortbl;\red255\green255\blue255;\red106\green62\blue62;\red127\green0\blue85;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+
+\f0\fs24 \cf0 Main : MainRabbit : call the main of RabbitGrassModel\
+\
+\
+RabbitGrassModel : Use to make the model of the simulation.  The main is just launching the model that is implement by normal repast method : \
+variable : \
+\
+\
+	_schedule : use to make the grass and rabbits do what they have to do\
+	_grid : representation of the grid display on the screen\
+	_displaySurf : surface used to display the simulation\
+	_rabbit : list of all the rabbits alive\
+	_graph : graph of the number of rabbits and grasse in function of the time\
+	From there all the variables are input of the simulation that you can change before its beginning in the program, so for that they all have the get and set method for themselves :\
+	_rabbit : number of rabbit at the beginning of the simulation\
+	_birthThreshold : threshold after which a rabbit can give birth\
+	_grassGrowRate : number of grasses that grow by iteration\
+	_grassEnergy : energy given by eating a grass\
+	_xSize : size of the window along the X axis\
+	_ySize : size of the window along the Y axis\
+\
+\
+-getName : give just the name of the program\
+\
+\
+-setup: which prepare the program before beginning of the simulation : it reinitialize the display surface (displaySurf), the list of rabbit (rabbitList), the schedule (that is use to give instruction to the grass and rabbits in the simulation)(schedule), the display of the graph that show the number of grasses and rabbits at each iteration (graph). And it create the slider for the in put of the simulation.\
+-begin : method called at the beginning of the simulation it call 3 method :\
+	\
+		- -buildModel which create the grid on which the rabbits will move and fill it with the number \'ab\'a0number\'a0\'bb of rabbit, those rabbit are put randomly on the grid with a random level of energy from 1 to \'ab\'a0energyToBirth\'a0\'bb - 1.\
+\
+	- -buildSchedule who create 2 schedule : PlotUpdate that update the graph just calling the step() of the graph created and NatureStep which implements the behavior of the rabbits and grasses :\
+		- - -randomly creates grass on the grid\
+		- - - call RabbitReaper that delete all the rabbits whose energy <1 of the grid and of the rabbitList\
+		- - -call RabbitCreater : for all rabbit with energy < \'ab\'a0
+\f1\fs22 birthThreshold\'a0\'bb it take them \'ab\'a0birthThreshold\'a0\'bb energy and create a rabbit no the grid\
+		- - -finally it updates the display surface\
+\
+	- - BuildDisplay create 2 display for displaySurf  :\
+		- - -one for the grass (\cf2 displayGrass)\cf0  that take the grid of the grass coloring green when there is grass and black when there is not\
+		- - -another for the rabbit (\cf2 displayRabbit\cf0 ) that took the rabbit grid from\'a0\'bbgrid\'a0\'bb and drawing the symbol of the rabbit with the draw function of 
+\f0\fs24 RabbitGrassAgent (here a white circle) when there is a rabbit in the rabbit\'92s grid.\
+		And adding to the graph the display for the rabbits and grass with 2 classe : 
+\f1\fs22 rabbitInSpace and grassInSpace 
+\f0\fs24 that both 
+\f1\fs22 \cf3 implements\cf0  DataSource and Sequence\
+\
+	begin then display the graph and the surface and make the graph make a step so that we have the beginning situation.\
+\
+\
+\
+\
+\pard\pardeftab720
+\cf0 RabbitsGrassSimulationSpace : Class for the space on which there is rabbit and grasses.\
+variable :\
+	_gridGrass : grid which represent where there is grass\
+	_rabbitGrass : grid which represent where there is rabbit\
+	_countGrass : count the number of grass 
+\f0\fs24 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural
+\cf0 \
+\
+\
+ }
