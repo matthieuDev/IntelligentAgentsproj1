@@ -6,9 +6,6 @@ import uchicago.src.sim.space.Object2DGrid;
  */
 
 public class RabbitsGrassSimulationSpace {
-	//In grid boolean on 2 bit if big one is 1 there is a rabbit on the
-	//case, if little one there is grass : ex : 
-	//1=01 => grass but no rabbit
 	private Object2DGrid gridGrass;
 	private Object2DGrid rabbitGrid;
 	private int countGrass = 0 ;
